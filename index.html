@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Testing Mcube Tags</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <!-- Badge -->
+    <h1>Badge</h1>
+    <mci-badge value="New" status="danger" text-color="white" padding="8px 18px" hide="false"
+        set-position="bottom-left"></mci-badge>
+
+    <br><br>
+
+    <!-- Alert -->
+    <h1>Alert</h1>
+    <mci-alert value="This is an alert!" text-color="white" text-size="50px" status="danger" auto-close="5000"
+        width="200px" dismissible ></mci-alert>
+    <br><br>
+
+
+    <!-- Toggle -->
+    <h1>Toggle</h1>
+    <mci-toggle height="50px" set-position="top-right" on-label="Toggle On" off-label="Toggle Off"
+        size="medium" ></mci-toggle>
+    <br><br>
+
+
+    <!-- Help text -->
+    <h1>Help Text</h1>
+    <table>
+        <tr>
+            <td><label for="username">Username:</label></td>
+            <td>
+                <input type="text" id="username" name="username">
+                <mci-help-text for="username" value="Username must be at least 8 characters" font-size="15px"
+                    text-color="gray" text-size="16px"></mci-help-text>
+            </td>
+        </tr>
+        <tr>
+            <td><label for="password">Password:</label></td>
+            <td>
+                <input type="password" id="password" name="password">
+                <mci-help-text for="password" value="Password must contain symbols and letters" font-size="15px"
+                    text-color="blue"  text-size="16px"></mci-help-text>
+            </td>
+        </tr>
+    </table>
+
+    <!-- Clock -->
+    <h1>Clock</h1>
+    <mci-clock value="My Clock" text-color="white" set-position="top-right" width="200px" border-radius="40px"
+        status="info" bg-color="#bb33ff" padding="10px"></mci-clock>
+    <br><br> <br><br>
+
+
+    <!-- Rating Tag -->
+    <h1>Rating tag</h1>
+    <br><br>
+    <mci-rating max="5" rating="3.5" bg-color="black" padding="10px" border-radius="30px" style="margin-top: 50%;"></mci-rating>
+    <br><br>
+
+    <!-- Tool Tip -->
+    <h1> Tooltip</h1>
+    <button id="btnTop">Top Tooltip</button>
+    <mci-tool-tip for="btnTop" value="Tooltip on top" tooltip-direction="top" bg-color="black" padding="10px"
+        border-radius="30px" text-size="30px" text-color="white" width="80px"></mci-tool-tip>
+
+    <button id="btnBottom">Bottom Tooltip</button>
+    <mci-tool-tip for="btnBottom" value="Tooltip at bottom" tooltip-direction="bottom" bg-color="black" padding="10px"
+        border-radius="30px"></mci-tool-tip>
+
+    <button id="btnLeft">Left Tooltip</button>
+    <mci-tool-tip for="btnLeft" value="Tooltip on left" tooltip-direction="left" bg-color="black" padding="10px"
+        border-radius="30px"></mci-tool-tip>
+
+    <button id="btnRight">Right Tooltip</button>
+    <mci-tool-tip for="btnRight" value="Tooltip on right" tooltip-direction="right" bg-color="black" padding="10px"
+        border-radius="30px"></mci-tool-tip>
+
+
+
+    <script type="module" src="./src/main.js"></script>
+
+
+    <script>
+        const badge = document.querySelector("mci-clock")
+        setTimeout(() => {
+            badge.hide();
+        }, 2000);
+
+        setTimeout(() => {
+            badge.show();
+        }, 4000);
+    </script>
+</body>
+
+</html>

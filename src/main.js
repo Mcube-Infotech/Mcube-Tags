@@ -1,0 +1,7 @@
+import './components/mci-badge.js'
+import './components/mci-alert.js'
+import './components/mci-toggle.js'
+import './components/mci-help-text.js'
+import './components/mci-clock.js'
+import './components/mci-rating-tag.js'
+import './components/mci-tooltip.js'
