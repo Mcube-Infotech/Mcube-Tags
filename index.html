@@ -11,22 +11,19 @@
 <body>
     <!-- Badge -->
     <h1>Badge</h1>
-    <mci-badge value="New" status="danger" text-color="white" padding="8px 18px" hide="false"
-        set-position="bottom-left"></mci-badge>
+    <mci-badge value="New" status="danger" text-color="white"  padding="8px 18px"  size="xx-large"></mci-badge>
 
     <br><br>
-
     <!-- Alert -->
     <h1>Alert</h1>
     <mci-alert value="This is an alert!" text-color="white" text-size="50px" status="danger" auto-close="5000"
         width="200px" dismissible ></mci-alert>
-    <br><br>
 
 
     <!-- Toggle -->
     <h1>Toggle</h1>
-    <mci-toggle height="50px" set-position="top-right" on-label="Toggle On" off-label="Toggle Off"
-        size="medium" ></mci-toggle>
+    <mci-toggle height="50px" set-position="top-right" on-label="Toggle On" off-label="Toggle Off" size="medium"
+        id="myToggle" ></mci-toggle>
     <br><br>
 
 
@@ -38,7 +35,7 @@
             <td>
                 <input type="text" id="username" name="username">
                 <mci-help-text for="username" value="Username must be at least 8 characters" font-size="15px"
-                    text-color="gray" text-size="16px"></mci-help-text>
+                    text-color="gray" text-size="16px" ></mci-help-text>
             </td>
         </tr>
         <tr>
@@ -46,33 +43,36 @@
             <td>
                 <input type="password" id="password" name="password">
                 <mci-help-text for="password" value="Password must contain symbols and letters" font-size="15px"
-                    text-color="blue"  text-size="16px"></mci-help-text>
+                    text-color="blue" text-size="16px" id="helptext"></mci-help-text>
             </td>
         </tr>
     </table>
 
+
     <!-- Clock -->
     <h1>Clock</h1>
-    <mci-clock value="My Clock" text-color="white" set-position="top-right" width="200px" border-radius="40px"
-        status="info" bg-color="#bb33ff" padding="10px"></mci-clock>
+    <mci-clock value="My Clock" text-color="white" text-size="12px" set-position="top-right" width="200px"
+        border-radius="40px" status="info" bg-color="#bb33ff" padding="10px" id="myClock" ></mci-clock>
     <br><br> <br><br>
 
 
     <!-- Rating Tag -->
     <h1>Rating tag</h1>
+
+    <mci-rating max="5" rating="4.5" bg-color="black" padding="10px" border-radius="30px" id="myRatingtag" ></mci-rating>
     <br><br>
-    <mci-rating max="5" rating="3.5" bg-color="black" padding="10px" border-radius="30px" style="margin-top: 50%;"></mci-rating>
-    <br><br>
+
+
 
     <!-- Tool Tip -->
     <h1> Tooltip</h1>
     <button id="btnTop">Top Tooltip</button>
     <mci-tool-tip for="btnTop" value="Tooltip on top" tooltip-direction="top" bg-color="black" padding="10px"
-        border-radius="30px" text-size="30px" text-color="white" width="80px"></mci-tool-tip>
+        border-radius="30px"  text-color="white" width="80px" ></mci-tool-tip>
 
     <button id="btnBottom">Bottom Tooltip</button>
     <mci-tool-tip for="btnBottom" value="Tooltip at bottom" tooltip-direction="bottom" bg-color="black" padding="10px"
-        border-radius="30px"></mci-tool-tip>
+        border-radius="30px" id="tooltip"></mci-tool-tip>
 
     <button id="btnLeft">Left Tooltip</button>
     <mci-tool-tip for="btnLeft" value="Tooltip on left" tooltip-direction="left" bg-color="black" padding="10px"
@@ -82,20 +82,131 @@
     <mci-tool-tip for="btnRight" value="Tooltip on right" tooltip-direction="right" bg-color="black" padding="10px"
         border-radius="30px"></mci-tool-tip>
 
+    <!-- Button -->
+    <h1>Button</h1>
+    <mci-button text="Normal Button" bg-color="black" text-color="white" hover-effect="scale" 
+        border-radius="40px"></mci-button>
+    <br><br><br>
+    <mci-button text="Outlined Button" variant="outline" hover-effect="shadow" bg-color="#008B8B"
+        border-radius="30px"></mci-button>
+    <br><br><br>
+    <mci-button text="Disabled Button" variant="disable" border-radius="30px"></mci-button>
+    <br><br><br>
+
 
 
     <script type="module" src="./src/main.js"></script>
-
-
     <script>
-        const badge = document.querySelector("mci-clock")
-        setTimeout(() => {
-            badge.hide();
-        }, 2000);
+        // Toggle
+        document.addEventListener("DOMContentLoaded", () => {
+            const toggleElement = document.getElementById("myToggle");
 
-        setTimeout(() => {
+            // Call functions inherited from BaseElement
+            // toggleElement.show();
+            // // toggleElement.hide();
+            // // toggleElement.enable();
+            // toggleElement.disable();
+            // // toggleElement.addClass("highlight");
+            // // toggleElement.removeClass("highlight");
+            // // toggleElement.toggleClass("active");
+            // toggleElement.reset();
+        });
+
+
+        // Button
+        document.addEventListener("DOMContentLoaded", () => {
+            const button = document.querySelector("mci-button");
+
+            // Call functions inherited from BaseElement
+            // button.hide();
+            // button.show();
+            // button.reset();
+            // button.disable();
+            // button.enable();
+            // button.addClass("button");
+            // button.removeClass("button");
+            // button.toggleClass("active");
+        });
+
+
+        //Clock
+        document.addEventListener("DOMContentLoaded", () => {
+            const clock = document.getElementById("myClock");
+
+            //Call Functions inherited from BaseElement
+            // clock.hide();
+            // clock.show();
+            clock.disable();
+            // clock.enable();
+            // clock.addClass("clock");
+            // clock.removeClass("clock");
+            // clock.toggleClass("active");
+        });
+
+        //Rating 
+        document.addEventListener("DOMContentLoaded", () => {
+            const rating = document.getElementById("myRatingtag");
+
+            // rating.hide();
+            // rating.show();
+            // rating.enable();
+            rating.disable();
+            // rating.addClass("rating");
+            // rating.removeClass("rating");
+            // rating.toggleClass("active");
+            // rating.reset();
+        });
+
+        //Helptext 
+        document.addEventListener("DOMContentLoaded", () => {
+            const help_text = document.getElementById("helptext");
+
+            // help_text.hide();
+            // help_text.show();
+            // help_text.enable();
+            // help_text.disable();
+            // help_text.addClass("text");
+            // help_text.removeClass("text");
+            // help_text.toggleClass("active");
+
+        });
+
+        //Alert
+        document.addEventListener("DOMContentLoaded", () => {
+            const alert_msg = document.querySelector("mci-alert");
+
+            // alert_msg.hide();
+            // alert_msg.show();
+            // alert_msg.enable();
+            alert_msg.disable();
+            // alert_msg.addClass("alert");
+            // alert_msg.removeClass("alert");
+            alert_msg.toggleClass("active");
+        });
+
+        //Badge 
+        document.addEventListener("DOMContentLoaded", () => {
+            const badge = document.querySelector("mci-badge");
+
+            // badge.hide();
             badge.show();
-        }, 4000);
+            badge.disable();
+            // badge.enable();
+            // badge.addClass("alert");
+            // badge.removeClass("alert");
+            // badge.toggleClass("active");
+            // badge.reset();
+        });
+
+        document.querySelector("mci-badge").reset();
+
+        // ToolTip
+        document.addEventListener("DOMContentLoaded", () => {
+            const tool_tip = document.getElementById("tooltip");
+            // tool_tip.addClass("tip");
+            // tool_tip.removeClass("tip");
+            // tool_tip.toggleClass("active");
+        });
     </script>
 </body>
 

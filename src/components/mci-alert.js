@@ -9,7 +9,7 @@ export class AlertElement extends BaseElement {
     static get observedAttributes() {
         return [...BaseElement.observedAttributes, "value", "dismissible", "auto-close", "width", "height", "padding"];
     }
-    
+
     _applyStylesFromAttributes() {
         if (this.hasAttribute("width")) {
             let width = this.getAttribute("width");
@@ -18,7 +18,7 @@ export class AlertElement extends BaseElement {
         if (this.hasAttribute("height")) {
             let height = this.getAttribute("height");
             this.style.height = height
-        }  if (this.hasAttribute("padding")) {
+        } if (this.hasAttribute("padding")) {
             let padding = this.getAttribute("padding");
             this.style.padding = padding
         }
@@ -106,6 +106,23 @@ export class AlertElement extends BaseElement {
         }
         this._applyStylesFromAttributes();
     }
+    disable() {
+        disable();
+        const closeBtn = this.shadowRoot.querySelector(".close-btn");
+        if (closeBtn) {
+            closeBtn.style.pointerEvents = "none";
+            closeBtn.style.opacity = "0.5";
+        }
+    }
+    enable() {
+        super.enable();
+        const closeBtn = this.shadowRoot.querySelector(".close-btn");
+        if (closeBtn) {
+            closeBtn.style.pointerEvents = "auto";
+            closeBtn.style.opacity = "1";
+        }
+    }
+
 }
 
 customElements.define("mci-alert", AlertElement);

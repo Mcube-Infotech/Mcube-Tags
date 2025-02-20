@@ -9,7 +9,7 @@ class MCIClock extends BaseElement {
     }
 
     static get observedAttributes() {
-        return ["value", "set-position", ...BaseElement.observedAttributes];
+        return ["value", "set-position", "disabled", ...BaseElement.observedAttributes];
     }
 
     _updateAttributes() {
@@ -30,9 +30,24 @@ class MCIClock extends BaseElement {
         if (name === "value") {
             this.timerTitle.textContent = newValue;
         }
+        if (name === "disabled") {
+            this.toggleDisabledState(newValue !== null);
+        }
         this._updateAttributes();
         this._applystylesFromAttributes();
         this.applyStyles();
+    }
+
+    toggleDisabledState(isDisabled) {
+        if (isDisabled) {
+            clearInterval(this.interval); // Stop updating time
+            this.timerDisplay.style.opacity = "0.5"; // Make it visually disabled
+            this.timerDisplay.style.pointerEvents = "none"; // Prevent interactions
+        } else {
+            this.interval = setInterval(() => this.updateTime(), 1000); // Restart time update
+            this.timerDisplay.style.opacity = "1";
+            this.timerDisplay.style.pointerEvents = "auto";
+        }
     }
 
     render() {
@@ -57,9 +72,15 @@ class MCIClock extends BaseElement {
                     font-size: 24px;
                     font-weight: bold;
                 }
-               :host(:hover) {
+
+                :host(:hover) {
                     transform: scale(1.05);
                     box-shadow: 0 10px 12px rgba(0, 0, 0, 0.3);
+                }
+
+                :host([disabled]) .time {
+                    opacity: 0.5;
+                    pointer-events: none;
                 }
             </style>
             <div>
@@ -74,6 +95,7 @@ class MCIClock extends BaseElement {
     }
 
     updateTime() {
+        if (this.hasAttribute("disabled")) return; // Stop updating if disabled
         const now = new Date();
         const hours = String(now.getHours()).padStart(2, "0");
         const minutes = String(now.getMinutes()).padStart(2, "0");

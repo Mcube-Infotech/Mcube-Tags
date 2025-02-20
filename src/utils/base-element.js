@@ -1,9 +1,16 @@
-// src/utils/base-element.js
-import { getAttr, setAttr, removeAttr, emitEvent, attachShadow } from "./common-functions.js";
+import { getAttr, setAttr, removeAttr, emitEvent, attachShadow } from "./base-functions.js";
+import * as CommonFunctions from "./common_function.js";
 
 export class BaseElement extends HTMLElement {
     constructor() {
         super();
+        Object.assign(this, CommonFunctions); // Assign common functions
+
+        // // // Explicitly bind functions to ensure they have the correct `this`
+        // // Object.entries(CommonFunctions).forEach(([name, fn]) => {
+        // //     this[name] = fn.bind(this);
+        // });
+
         this.shadow = attachShadow(this, this.styles || "");
         if (typeof this.init === "function") {
             this.init();
@@ -29,6 +36,18 @@ export class BaseElement extends HTMLElement {
     }
 
     applyStyles() {
+        const sizeMapping = {
+            "small": "12px",
+            "large": "20px",
+            "smaller": "smaller",
+            "larger": "larger",
+            "x-small": "10px",
+            "x-large": "24px",
+            "xx-small": "8px",
+            "xx-large": "32px",
+            "medium": "16px"
+        };
+
         const styles = {
             width: getAttr(this, "width", "auto"),
             height: getAttr(this, "height", "auto"),
@@ -37,11 +56,12 @@ export class BaseElement extends HTMLElement {
             padding: getAttr(this, "padding", "5px"),
             border: getAttr(this, "border", "none"),
             borderRadius: getAttr(this, "border-radius", "5px"),
-            display: getAttr(this, "hide", "false") === "true" ? "none" : "block",
+            fontSize: sizeMapping[getAttr(this, "size", "medium")], // Apply size mapping
+            display: this.hasAttribute("hide") ? "none" : "block", 
             position: "absolute",
-            ...this.getPositionStyles(getAttr(this, "set-position", "top left"))
+            ...this.getPositionStyles(getAttr(this, "set-position", ""))
         };
-
+    
         Object.assign(this.style, styles);
     }
 
@@ -69,41 +89,6 @@ export class BaseElement extends HTMLElement {
             right: horizontal === "right" ? "0" : "auto",
             transform: vertical === "middle" || horizontal === "center" ? "translate(-50%, -50%)" : "none"
         };
-    }
- show() {
-        console.log("Show called on", this);
-        this.removeAttribute("hide");
-    }
-
-    hide() {
-        console.log("Hide called on", this);
-        this.setAttribute("hide", "true");
-    }
-
-    enable() {
-        console.log("Enable called on", this);
-        this.removeAttribute("disabled");
-    }
-
-    disable() {
-        console.log("Disable called on", this);
-        this.setAttribute("disabled", "true");
-    }
-
-    addClass(className) {
-        this.classList.add(className);
-    }
-
-    removeClass(className) {
-        this.classList.remove(className);
-    }
-
-    toggleClass(className) {
-        this.classList.toggle(className);
-    }
-
-    reset() {
-        this.applyStyles && this.applyStyles();
     }
 
     onAttributeChange(name, value) {

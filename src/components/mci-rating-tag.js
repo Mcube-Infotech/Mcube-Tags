@@ -72,6 +72,15 @@ class MCIRating extends BaseElement {
         this.container = this.shadowRoot.querySelector("div");
         this._updateStars();
     }
+    disable() {
+        super.disable();
+        this.style.pointerEvents = "none"; // Prevent interaction
+    }
+    enable() {
+        super.enable();
+        this.style.pointerEvents = "auto";
+    }
+
 }
 
 customElements.define("mci-rating", MCIRating);

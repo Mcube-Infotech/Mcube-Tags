@@ -55,6 +55,10 @@ export class BadgeElement extends BaseElement {
         }
         this.applyStyles();
     }
+    disable() {
+        super.disable();
+        this.style.color = "gray"; 
+    }
 }
 
 customElements.define("mci-badge", BadgeElement);

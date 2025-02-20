@@ -15,7 +15,7 @@ export class MCIToolTip extends BaseElement {
             let width = this.getAttribute("width");
             this.style.width = width
         }
-        
+
         if (this.hasAttribute("height")) {
             let height = this.getAttribute("height");
             this.style.height = height
@@ -185,6 +185,14 @@ export class MCIToolTip extends BaseElement {
             this.updatePosition();
         }
         this._applyStylesFromAttributes();
+    }
+    disable() {
+        super.disable();
+        this.style.color = "gray"; // Change text color
+    }
+    enable() {
+        super.enable();
+        this.style.color = this.getAttribute("text-color") || "black";
     }
 }
 
