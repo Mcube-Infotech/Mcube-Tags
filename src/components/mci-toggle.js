@@ -7,7 +7,7 @@ export class ToggleSwitchElement extends BaseElement {
     }
 
     static get observedAttributes() {
-        return [...BaseElement.observedAttributes, "checked", "disabled", "size", "on-label", "off-label"];
+        return [...BaseElement.observedAttributes, "checked", "disabled", "size", "on-label", "off-label", "label-msg", "bg-color", "text-color", "switch-label-color", "set-position"];
     }
 
     connectedCallback() {
@@ -15,14 +15,19 @@ export class ToggleSwitchElement extends BaseElement {
     }
 
     render() {
-        const size = this.getAttribute("size") || "medium"; // Default to medium
+        const size = this.getAttribute("size") || "medium"; 
         const onLabel = this.getAttribute("on-label") || "ON";
         const offLabel = this.getAttribute("off-label") || "OFF";
         const isDisabled = this.hasAttribute("disabled");
-        // const checked = this.hasAttribute("checked");
+        const labelMsg = this.getAttribute("label-msg") || "on";
+        
+        const onBgColor = this.getAttribute("bg-color") || "#373737"; // Color when switched ON
+        const offBgColor = "#ccc"; // Default color when switched OFF
+        const textColor = this.getAttribute("text-color") || "#666";
+        const switchLabelColor = this.getAttribute("switch-label-color") || "#fff";
+        const setPosition = this.getAttribute("set-position") || "static";
 
-        //'this.checked' is always in sync with the attribute
-        this.checked = this.hasAttribute("checked")
+        this.checked = this.hasAttribute("checked");
 
         // Define size variations
         const sizes = {
@@ -39,6 +44,7 @@ export class ToggleSwitchElement extends BaseElement {
                     align-items: center;
                     cursor: ${isDisabled ? "not-allowed" : "pointer"};
                     user-select: none;
+                    position: ${setPosition};
                 }
 
                 .switch {
@@ -61,7 +67,7 @@ export class ToggleSwitchElement extends BaseElement {
                     left: 0;
                     right: 0;
                     bottom: 0;
-                    background-color: ${this.checked ? "var(--toggle-on-bg, #2196F3)" : "var(--toggle-off-bg, #ccc)"};
+                    background-color: ${this.checked ? onBgColor : offBgColor};
                     transition: .4s;
                     border-radius: ${height};
                 }
@@ -83,8 +89,13 @@ export class ToggleSwitchElement extends BaseElement {
                     font-size: ${fontSize};
                     margin-left: 10px;
                     font-weight: bold;
-                    color: ${this.checked ? "var(--toggle-on-text, #2196F3)" : "var(--toggle-off-text, #666)"};
+                    color: ${textColor};
                     text-transform: uppercase;
+                    display: ${labelMsg === "on" ? "inline" : "none"};
+                }
+
+                .switch-label-on {
+                    color: ${switchLabelColor}; /* Custom color for switch label */
                 }
 
                 :host([disabled]) .switch {
@@ -97,35 +108,37 @@ export class ToggleSwitchElement extends BaseElement {
                 <input type="checkbox" ${this.checked ? "checked" : ""}>
                 <span class="slider"></span>
             </label>
-            <span class="switch-label">${this.checked ? onLabel : offLabel}</span>
+            <span class="switch-label switch-label-on">${this.checked ? onLabel : offLabel}</span>
         `;
 
-        //insert the query selector in innerhtml... 
         this.inputElement = this.shadow.querySelector("input");
         this.labelElement = this.shadow.querySelector(".switch-label");
+        this.sliderElement = this.shadow.querySelector(".slider");
         this.inputElement.addEventListener("change", () => this.handleToggle());
     }
 
-    //Additionally add one new method handleToggle() and thie method to update the attribute
     handleToggle() {
         this.checked = this.inputElement.checked;
 
-        //Update the attribute to reflect the change
         if (this.checked) {
             this.setAttribute("checked", "");
+            this.sliderElement.style.backgroundColor = this.getAttribute("bg-color") || "#373737";
         } else {
             this.removeAttribute("checked");
+            this.sliderElement.style.backgroundColor = "#ccc";
         }
 
-        this.labelElement.textContent = this.checked ? this.getAttribute("on-label") || "ON" : this.getAttribute("off-label") || "OFF";
+        if (this.labelElement) {
+            this.labelElement.textContent = this.checked ? this.getAttribute("on-label") || "ON" : this.getAttribute("off-label") || "OFF";
+        }
+        
         this.dispatchEvent(new CustomEvent("toggle", { detail: { checked: this.checked } }));
     }
 
     onAttributeChange(name, value) {
-        if (["checked", "disabled", "size", "on-label", "off-label"].includes(name)) {
+        if (["checked", "disabled", "size", "on-label", "off-label", "label-msg", "bg-color", "text-color", "switch-label-color", "set-position"].includes(name)) {
             this.checked = this.hasAttribute("checked");
 
-            //Add one if conditions to insert inputelement is checked...
             if (this.inputElement) {
                 this.inputElement.checked = this.checked;
             }
@@ -136,7 +149,6 @@ export class ToggleSwitchElement extends BaseElement {
     toggle() {
         this.checked = !this.checked;
 
-        // FIXED: Properly update attribute
         if (this.checked) {
             this.setAttribute("checked", "");
         } else {

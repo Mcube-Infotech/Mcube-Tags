@@ -9,7 +9,7 @@ class MCIClock extends BaseElement {
     }
 
     static get observedAttributes() {
-        return ["value", "set-position", "disabled", ...BaseElement.observedAttributes];
+        return ["value", "set-position", "disabled", "bg-color", "text-color", ...BaseElement.observedAttributes];
     }
 
     _updateAttributes() {
@@ -20,10 +20,12 @@ class MCIClock extends BaseElement {
     }
 
     _applystylesFromAttributes() {
-        if (this.hasAttribute("text-color")) {
-            let text_color = this.getAttribute("text-color");
-            this.timerDisplay.style.color = text_color;
-        }
+        let bgColor = this.getAttribute("bg-color") || "#373737";
+        this.outerElement.style.setProperty("--bg-color", bgColor); // Use CSS variable
+
+        let txtColor = this.getAttribute("text-color") || "#ffffff";
+        this.timerTitle.style.color = txtColor;
+        this.timerDisplay.style.color = txtColor;
     }
 
     onAttributeChange(name, oldValue, newValue) {
@@ -59,6 +61,9 @@ class MCIClock extends BaseElement {
                     align-items: center;
                     border-radius: inherit;
                     box-sizing: border-box;
+                    background: var(--bg-color, #373737);
+                    color: var(--text-color, white);
+                    padding: 10px;
                 }
 
                 h3 {
@@ -75,7 +80,7 @@ class MCIClock extends BaseElement {
 
                 :host(:hover) {
                     transform: scale(1.05);
-                    box-shadow: 0 10px 12px rgba(0, 0, 0, 0.3);
+                    box-shadow: 0 10px 12px rgba(136, 134, 134, 0.3);
                 }
 
                 :host([disabled]) .time {
@@ -84,7 +89,7 @@ class MCIClock extends BaseElement {
                 }
             </style>
             <div>
-                <h3></h3>
+                <h3>Mci Clock</h3>
                 <div class="time"></div>
             </div>
         `;
@@ -92,6 +97,9 @@ class MCIClock extends BaseElement {
         this.outerElement = this.shadowRoot.querySelector("div");
         this.timerTitle = this.shadowRoot.querySelector("h3");
         this.timerDisplay = this.shadowRoot.querySelector(".time");
+
+        // Apply default styles immediately after rendering
+        this._applystylesFromAttributes();
     }
 
     updateTime() {

@@ -6,7 +6,7 @@ export class MciButton extends BaseElement {
     }
 
     static get observedAttributes() {
-        return [...BaseElement.observedAttributes, "variant", "text", "hover-effect", "transition", "bg-color", "text-color"];
+        return [...BaseElement.observedAttributes, "variant", "text", "hover-effect", "transition"];
     }
 
     connectedCallback() {
@@ -16,13 +16,15 @@ export class MciButton extends BaseElement {
     render() {
         const text = this.getAttribute("text") || "Click Me";
         const variant = this.getAttribute("variant") || "normal";
-        const bgColor = this.getAttribute("bg-color") || "#007bff";
-        const textColor = this.getAttribute("text-color") || "#fff";
         const padding = this.getAttribute("padding") || "10px 20px";
         const borderRadius = this.getAttribute("border-radius") || "5px";
         const transition = this.getAttribute("transition") || "0.3s";
-        const hoverEffect = this.getAttribute("hover-effect") || "none"; // Default: no effect
-
+        const hoverEffect = this.getAttribute("hover-effect") || "none"; 
+    
+        // Get bg-color or status color
+        const bgColor = this.getAttribute("bg-color") || this.getStatusColor();
+        const textColor = this.getAttribute("text-color") || "#fff";
+    
         let buttonStyles = `
             padding: ${padding};
             border-radius: ${borderRadius};
@@ -32,15 +34,15 @@ export class MciButton extends BaseElement {
             border: none;
             outline: none;
         `;
-
+    
         let hoverStyles = "";
         if (hoverEffect.includes("scale")) {
-            hoverStyles += "transform: scale(1.05);"; // Scale-up effect
+            hoverStyles += "transform: scale(1.05);";
         }
         if (hoverEffect.includes("shadow")) {
-            hoverStyles += "box-shadow: 0px 4px 8px rgba(1, 0, 0, 1);"; // Drop shadow
+            hoverStyles += "box-shadow: 0px 4px 8px rgba(1, 0, 0, 1);";
         }
-
+    
         if (variant === "outline") {
             buttonStyles += `
                 background: transparent !important;
@@ -58,7 +60,7 @@ export class MciButton extends BaseElement {
         } else {
             buttonStyles += `background: ${bgColor} !important; color: ${textColor} !important;`;
         }
-
+    
         this.shadow.innerHTML = `
             <style>
                 :host {
@@ -82,9 +84,9 @@ export class MciButton extends BaseElement {
             <button>${text}</button>
         `;
     }
-
+    
     onAttributeChange(name) {
-        if (["bg-color", "text-color", "variant", "hover-effect"].includes(name)) {
+        if (["status", "variant", "hover-effect"].includes(name)) {
             this.render();
         }
     }

@@ -58,7 +58,7 @@ export class MCIToolTip extends BaseElement {
                 :host {
                     position: absolute;
                     display: none;
-                    background: var(--tooltip-bg, ${this.getAttribute("bg-color") || "black"});
+                    background: var(--tooltip-bg, ${this.getAttribute("bg-color") || "#373737"});
                     color: var(--tooltip-text, ${this.getAttribute("text-color") || "white"});
                     padding: ${this.getAttribute("padding") || "5px 10px"};
                     border-radius: ${this.getAttribute("border-radius") || "4px"};

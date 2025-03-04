@@ -51,11 +51,11 @@ export class BaseElement extends HTMLElement {
         const styles = {
             width: getAttr(this, "width", "auto"),
             height: getAttr(this, "height", "auto"),
-            backgroundColor: getAttr(this, "bg-color", "transparent"),
+            backgroundColor: getAttr(this, "bg-color", "#373737"),
             color: getAttr(this, "text-color", "#000"),
             padding: getAttr(this, "padding", "5px"),
             border: getAttr(this, "border", "none"),
-            borderRadius: getAttr(this, "border-radius", "5px"),
+            borderRadius: getAttr(this, "border-radius", "20px"),
             fontSize: sizeMapping[getAttr(this, "size", "medium")], // Apply size mapping
             display: this.hasAttribute("hide") ? "none" : "block", 
             position: "absolute",
@@ -66,10 +66,10 @@ export class BaseElement extends HTMLElement {
     }
 
     getStatusColor() {
-        const status = getAttr(this, "status", "primary");
+        const status = getAttr(this, "status", "secondary");
         const statusColors = {
             primary: "#007bff",
-            secondary: "#6c757d",
+            secondary: "#373737",
             success: "#28a745",
             danger: "#dc3545",
             warning: "#ffc107",
@@ -77,7 +77,7 @@ export class BaseElement extends HTMLElement {
             light: "#f8f9fa",
             dark: "#343a40"
         };
-        return statusColors[status] || "#007bff";
+        return statusColors[status] || "#373737";
     }
 
     getPositionStyles(position) {

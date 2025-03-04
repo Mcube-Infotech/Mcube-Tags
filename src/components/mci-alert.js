@@ -33,10 +33,10 @@ export class AlertElement extends BaseElement {
     }
 
     render() {
-        const bgColor = this.getStatusColor();
+        const bgColor = this.getStatusColor() || "#373737"; // Ensure default color
         const isDismissible = this.hasAttribute("dismissible");
         const closeButton = isDismissible ? `<button class="close-btn">&times;</button>` : "";
-
+    
         this.shadow.innerHTML = `
             <style>
                 :host {
@@ -56,12 +56,12 @@ export class AlertElement extends BaseElement {
                     transform: translateY(-10px);
                     transition: opacity 3s ease-in-out, transform 1s ease-in-out;
                 }
-
+    
                 :host(.show) {
                     opacity: 1;
                     transform: translateY(0);
                 }
-
+    
                 .close-btn {
                     background: none;
                     border: none;
@@ -71,7 +71,7 @@ export class AlertElement extends BaseElement {
                     cursor: pointer;
                     margin-left: 10px;
                 }
-
+    
                 .close-btn:hover {
                     opacity: 0.7;
                 }
@@ -79,11 +79,12 @@ export class AlertElement extends BaseElement {
             <span>${this.getAttribute("value") || "Alert message"}</span>
             ${closeButton}
         `;
-
+    
         if (isDismissible) {
             this.shadow.querySelector(".close-btn").addEventListener("click", () => this.hide());
         }
     }
+    
 
     getPositionStyle() {
         const position = this.getAttribute("set-position") || "top left";

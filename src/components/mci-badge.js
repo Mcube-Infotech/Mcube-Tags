@@ -28,7 +28,7 @@ export class BadgeElement extends BaseElement {
                     text-align: center;
                     padding: 6px 12px;
                     white-space: nowrap;
-                    border-radius: 12px;
+                    border-radius: 30px;
                     background: var(--badge-bg, ${this.getStatusColor()}) !important;
                     color: var(--badge-text, #fff);
                     box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
