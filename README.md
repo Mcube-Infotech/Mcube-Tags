@@ -133,5 +133,6 @@ Licensed under the [MIT License](LICENSE).
 ---
 
 <p align="center">
+  <a align="center" href="https://www.buymeacoffee.com/mcubetags" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" ></a><br>
   Made with 💡 and lots of ☕ by <a href="https://github.com/Mcube-Infotech" target="_blank">Mcube Infotech</a>
 </p>
