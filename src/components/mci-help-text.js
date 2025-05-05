@@ -72,16 +72,6 @@ export class HelpTextElement extends BaseElement {
         const observer = new MutationObserver(checkTarget);
         observer.observe(document.body, { childList: true, subtree: true });
     }
-    disable() {
-        super.disable();
-        this.style.color = "gray"; // Change text color
-    }
-    enable() {
-        super.enable();
-        this.style.color = this.getAttribute("text-color") || "black";
-    }
-
-
 }
 
 customElements.define("mci-help-text", HelpTextElement);

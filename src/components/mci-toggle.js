@@ -13,15 +13,35 @@ export class ToggleSwitchElement extends BaseElement {
     connectedCallback() {
         this.render();
     }
+    getStatusColor() {
+        const status = this.getAttribute("status") || "secondary";
+        const statusColors = {
+            primary: "#007bff",
+            secondary: "#373737",
+            success: "#28a745",
+            danger: "#dc3545",
+            warning: "#ffc107",
+            info: "#17a2b8",
+            light: "#f8f9fa",
+            dark: "#343a40"
+        };
+        return statusColors[status] || "#373737";
+    }
 
     render() {
-        const size = this.getAttribute("size") || "medium"; 
+        const size = this.getAttribute("size") || "medium";
         const onLabel = this.getAttribute("on-label") || "ON";
         const offLabel = this.getAttribute("off-label") || "OFF";
         const isDisabled = this.hasAttribute("disabled");
         const labelMsg = this.getAttribute("label-msg") || "on";
-        
-        const onBgColor = this.getAttribute("bg-color") || "#373737"; // Color when switched ON
+
+        // Updated onBgColor logic
+        let onBgColor = this.getAttribute("bg-color");
+        if (!onBgColor) {
+            const statusColor = this.getStatusColor();
+            onBgColor = statusColor || "#373737";
+        }
+
         const offBgColor = "#ccc"; // Default color when switched OFF
         const textColor = this.getAttribute("text-color") || "#666";
         const switchLabelColor = this.getAttribute("switch-label-color") || "#fff";
@@ -29,7 +49,6 @@ export class ToggleSwitchElement extends BaseElement {
 
         this.checked = this.hasAttribute("checked");
 
-        // Define size variations
         const sizes = {
             small: { width: "40px", height: "20px", sliderSize: "14px", moveX: "18px", fontSize: "10px" },
             medium: { width: "60px", height: "34px", sliderSize: "26px", moveX: "26px", fontSize: "12px" },
@@ -95,7 +114,7 @@ export class ToggleSwitchElement extends BaseElement {
                 }
 
                 .switch-label-on {
-                    color: ${switchLabelColor}; /* Custom color for switch label */
+                    color: ${switchLabelColor};
                 }
 
                 :host([disabled]) .switch {
@@ -120,9 +139,16 @@ export class ToggleSwitchElement extends BaseElement {
     handleToggle() {
         this.checked = this.inputElement.checked;
 
+        // Updated onBgColor logic for toggle
+        let onBgColor = this.getAttribute("bg-color");
+        if (!onBgColor) {
+            const statusColor = this.getStatusColor();
+            onBgColor = statusColor || "#373737";
+        }
+
         if (this.checked) {
             this.setAttribute("checked", "");
-            this.sliderElement.style.backgroundColor = this.getAttribute("bg-color") || "#373737";
+            this.sliderElement.style.backgroundColor = onBgColor;
         } else {
             this.removeAttribute("checked");
             this.sliderElement.style.backgroundColor = "#ccc";
@@ -131,7 +157,7 @@ export class ToggleSwitchElement extends BaseElement {
         if (this.labelElement) {
             this.labelElement.textContent = this.checked ? this.getAttribute("on-label") || "ON" : this.getAttribute("off-label") || "OFF";
         }
-        
+
         this.dispatchEvent(new CustomEvent("toggle", { detail: { checked: this.checked } }));
     }
 
@@ -155,6 +181,8 @@ export class ToggleSwitchElement extends BaseElement {
             this.removeAttribute("checked");
         }
     }
+
+
 }
 
 customElements.define("mci-toggle", ToggleSwitchElement);

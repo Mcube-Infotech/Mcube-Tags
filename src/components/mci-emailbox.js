@@ -25,7 +25,7 @@ export class MCIEmailBox extends BaseElement {
 
         this.inputElement.style.backgroundColor = this.getAttribute("bg-color") || "#373737";
         this.inputElement.style.color = this.getAttribute("text-color") || "white";
-        this.inputElement.style.width = this.getAttribute("width") || "300px";
+        this.inputElement.style.width = this.getAttribute("width") || "auto";
         this.inputElement.style.fontSize = this.getAttribute("text-size") || "16px";
         this.inputElement.style.borderRadius = this.getAttribute("border-radius") || "0px";
         this.inputElement.style.border = "none"; // Remove extra border

@@ -11,21 +11,22 @@
 <body>
     <!-- Badge -->
     <h1>Badge</h1>
-    <mci-badge value="New" bg-color="blue" text-color="white" padding="8px 18px" size="xx-large"></mci-badge>
+    <mci-badge value="New" bg-color="black" text-color="white" padding="8px 18px"></mci-badge>
     <br><br>
 
     <!-- Alert -->
     <h1>Alert</h1>
-    <mci-alert value="This is an alert!"  text-size="50px"  auto-close="5000"
-        width="200px" dismissible></mci-alert>
+    <mci-alert value="This is an alert!" text-size="50px" width="200px" dismissible bg-color="black"
+        auto-close="2000"></mci-alert>
+
+    <!-- <mci-alert value="This is an alert!"  text-size="50px"  
+       dismissible></mci-alert> -->
 
     <!-- Toggle -->
     <h1>Toggle</h1>
-    <mci-toggle checked on-label="Active" off-label="Inactive" 
-        switch-label-color="black" size="large" label-msg="off"></mci-toggle>
+    <mci-toggle on-label="Active" status="danger" off-label="In Active" switch-label-color="black" size="medium"
+        label-msg="on" id="myToggle"></mci-toggle>
     <br>
-
-
 
     <!-- Help text -->
     <h1>Help Text</h1>
@@ -35,7 +36,7 @@
             <td>
                 <input type="text" id="username" name="username">
                 <mci-help-text for="username" value="Username must be at least 8 characters" font-size="15px"
-                    text-size="16px"></mci-help-text>
+                    text-size="16px" text-color="#007bff"></mci-help-text>
             </td>
         </tr>
         <tr>
@@ -43,70 +44,51 @@
             <td>
                 <input type="password" id="password" name="password">
                 <mci-help-text for="password" value="Password must contain symbols and letters" font-size="15px"
-                     text-size="16px" id="helptext"></mci-help-text>
+                    text-size="16px" id="helptext" text-color="#dc3545"></mci-help-text>
             </td>
         </tr>
     </table>
 
     <!-- Clock -->
     <h1>Clock</h1>
-    <mci-clock  set-position="top right" ></mci-clock>
+    <mci-clock set-position="middle center" bg-color="#e8c9f1" text-color="black"></mci-clock>
     <br>
 
     <!-- Rating Tag -->
     <h1>Rating tag</h1>
-    <mci-rating max="5" rating="4.5"  padding="10px" border-radius="30px" id="myRatingtag"></mci-rating>
+    <mci-rating max="5" rating="4.5" padding="10px" border-radius="30px" id="myRatingtag"></mci-rating>
     <br>
 
-
     <!-- Tool Tip -->
-    <h1> Tooltip</h1>
-    <button id="btnTop">Top Tooltip</button>
-    <mci-tool-tip for="btnTop" value="Tooltip on top" tooltip-direction="top"  padding="10px"
-        border-radius="30px" text-color="white" width="80px"></mci-tool-tip>
+    <h1>Tooltip</h1>
+    <button id="myBtn">Hover me</button>
 
-    <button id="btnBottom">Bottom Tooltip</button>
-    <mci-tool-tip for="btnBottom" value="Tooltip at bottom" tooltip-direction="bottom"  padding="10px"
-        border-radius="30px" id="tooltip"></mci-tool-tip>
+    <mci-tool-tip for="myBtn" value="This is a tooltip" tooltip-direction="right" bg-color="#000" text-color="#fff"
+        padding="10px" border-radius="10px"></mci-tool-tip>
 
-    <button id="btnLeft">Left Tooltip</button>
-    <mci-tool-tip for="btnLeft" value="Tooltip on left" tooltip-direction="left"  padding="10px"
-        border-radius="30px"></mci-tool-tip>
 
-    <button id="btnRight">Right Tooltip</button>
-    <mci-tool-tip for="btnRight" value="Tooltip on right" tooltip-direction="right"  padding="10px"
-        border-radius="30px"></mci-tool-tip>
 
     <!-- Button -->
     <h1>Button</h1>
-    <mci-button text="Normal Button"  text-color="white" hover-effect="scale"
-        border-radius="40px"></mci-button>
+    <mci-button text="Normal Button" text-color="white" hover-effect="scale" border-radius="40px"></mci-button>
     <br><br><br>
-    <mci-button text="Outlined Button" variant="outline" hover-effect="shadow"
-        border-radius="30px"></mci-button>
+    <mci-button text="submit" variant="outline" hover-effect="scale" style="max-width: 180px; padding: 10px;" disabled
+        border-radius="10px" status="warning"></mci-button>
     <br><br><br>
     <mci-button text="Disabled Button" variant="disable" border-radius="30px"></mci-button>
     <br>
 
     <!-- Mail Box -->
     <h1>Mail Box</h1>
-    <mci-email-box set-position="middle center" value="jai@mcube.in" text-size="18px" padding="10px"></mci-email-box>
-
+    <mci-email-box text-size="18px" status="success" bg-color="black" border-radius="12px"></mci-email-box>
+    <!-- <mci-email-box padding="20px" text-size="18px"border-radius="8px"></mci-email-box> -->
     <!-- Password Box -->
     <h1>Password Box</h1>
     <mci-password-box id="passwordBox" placeholder="Enter your password" min-length="6" max-length="12" number="2"
-        symbol="1" uppercase="1" characters="7" text-color="white" border-radius="5px"
-         icon-ui="true"></mci-password-box>
+        symbol="1" uppercase="1" characters="7" text-color="white" border-radius="5px" icon-ui="true"
+        disabled></mci-password-box>
 
-
-
-
-
-
-
-
-
-    <script type="module" src="./src/main.js"></script>
+    <!-- <script type="module" src="./src/main.js"></script> -->
     <script>
         // Toggle
         document.addEventListener("DOMContentLoaded", () => {
@@ -117,9 +99,9 @@
             // toggleElement.hide();
             // // toggleElement.enable();
             // toggleElement.disable();
-            // // toggleElement.addClass("highlight");
+            // toggleElement.addClass("highlight");
             // // toggleElement.removeClass("highlight");
-            // // toggleElement.toggleClass("active");
+            toggleElement.toggleClass("active");
             // toggleElement.reset();
         });
 
@@ -187,12 +169,12 @@
             const alert_msg = document.querySelector("mci-alert");
 
             // alert_msg.hide();
-            alert_msg.show();
-            // alert_msg.enable();
-            alert_msg.disable();
-            // alert_msg.addClass("alert");
-            // alert_msg.removeClass("alert");
-            alert_msg.toggleClass("active");
+            // alert_msg.show();
+            // // alert_msg.enable();
+            // alert_msg.disable();
+            // // alert_msg.addClass("alert");
+            // // alert_msg.removeClass("alert");
+            // alert_msg.toggleClass("active");
         });
 
         //Badge 
@@ -219,6 +201,9 @@
             // tool_tip.toggleClass("active");
         });
     </script>
+
+    <!-- <script src="https://cdn.jsdelivr.net/gh/Mcube-Infotech/Mcube-Tags/dist/mcube-tags.es.js"></script> -->
+     <script src="../Mcube-Tags/dist/mcube-tags.es.js"></script>
 </body>
 
 </html>

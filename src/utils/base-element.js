@@ -51,11 +51,11 @@ export class BaseElement extends HTMLElement {
         const styles = {
             width: getAttr(this, "width", "auto"),
             height: getAttr(this, "height", "auto"),
-            backgroundColor: getAttr(this, "bg-color", "#373737"),
-            color: getAttr(this, "text-color", "#000"),
+            backgroundColor: getAttr(this, "bg-color", "#fffff"),
+            color: getAttr(this, "text-color", "white"),
             padding: getAttr(this, "padding", "5px"),
             border: getAttr(this, "border", "none"),
-            borderRadius: getAttr(this, "border-radius", "20px"),
+            borderRadius: getAttr(this, "border-radius", "8px"),
             fontSize: sizeMapping[getAttr(this, "size", "medium")], // Apply size mapping
             display: this.hasAttribute("hide") ? "none" : "block", 
             position: "absolute",

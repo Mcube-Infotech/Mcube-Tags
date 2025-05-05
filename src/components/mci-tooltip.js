@@ -12,38 +12,31 @@ export class MCIToolTip extends BaseElement {
 
     _applyStylesFromAttributes() {
         if (this.hasAttribute("width")) {
-            let width = this.getAttribute("width");
-            this.style.width = width
+            this.style.width = this.getAttribute("width");
         }
 
         if (this.hasAttribute("height")) {
-            let height = this.getAttribute("height");
-            this.style.height = height
+            this.style.height = this.getAttribute("height");
         }
 
         if (this.hasAttribute("padding")) {
-            let padding = this.getAttribute("padding");
-            this.style.padding = padding
+            this.style.padding = this.getAttribute("padding");
         }
 
         if (this.hasAttribute("text-size")) {
-            let textSize = this.getAttribute("padding");
-            this.style.fontSize = textSize
+            this.style.fontSize = this.getAttribute("text-size");
         }
 
         if (this.hasAttribute("text-color")) {
-            let textColor = this.getAttribute("text-color");
-            this.style.color = textColor
+            this.style.color = this.getAttribute("text-color");
         }
 
         if (this.hasAttribute("bg-color")) {
-            let bgColor = this.getAttribute("bg-color");
-            this.style.backgroundColor = bgColor
+            this.style.backgroundColor = this.getAttribute("bg-color");
         }
 
         if (this.hasAttribute("border-radius")) {
-            let borderRadius = this.getAttribute("border-radius");
-            this.style.borderRadius = borderRadius
+            this.style.borderRadius = this.getAttribute("border-radius");
         }
     }
 
@@ -53,16 +46,19 @@ export class MCIToolTip extends BaseElement {
     }
 
     render() {
+        const isTestEnv = location.hostname === "localhost" || location.hostname === "127.0.0.1";
+        const positionType = isTestEnv ? "absolute" : "fixed";
+
         this.shadow.innerHTML = `
             <style>
                 :host {
-                    position: absolute;
+                    position: ${positionType};
                     display: none;
                     background: var(--tooltip-bg, ${this.getAttribute("bg-color") || "#373737"});
                     color: var(--tooltip-text, ${this.getAttribute("text-color") || "white"});
                     padding: ${this.getAttribute("padding") || "5px 10px"};
                     border-radius: ${this.getAttribute("border-radius") || "4px"};
-                    font-size: ${this.getAttribute("font-size") || "12px"};
+                    font-size: ${this.getAttribute("text-size") || "12px"};
                     white-space: nowrap;
                     z-index: 1000;
                     transition: opacity 0.3s ease-in-out;
@@ -76,7 +72,6 @@ export class MCIToolTip extends BaseElement {
                     border-style: solid;
                 }
 
-                /* Tooltip Arrow Styles */
                 :host([tooltip-direction="top"]) .tooltip-arrow {
                     bottom: -5px;
                     left: 50%;
@@ -130,12 +125,16 @@ export class MCIToolTip extends BaseElement {
     showTooltip() {
         this.updatePosition();
         this.style.display = "block";
-        setTimeout(() => { this.style.opacity = "1"; }, 10);
+        setTimeout(() => {
+            this.style.opacity = "1";
+        }, 10);
     }
 
     hideTooltip() {
         this.style.opacity = "0";
-        setTimeout(() => { this.style.display = "none"; }, 300);
+        setTimeout(() => {
+            this.style.display = "none";
+        }, 300);
     }
 
     updatePosition() {
@@ -144,7 +143,6 @@ export class MCIToolTip extends BaseElement {
         const rect = this.targetElement.getBoundingClientRect();
         const tooltipDirection = this.getAttribute("tooltip-direction") || "top";
 
-        // Make tooltip visible temporarily for accurate measurement
         this.style.visibility = "hidden";
         this.style.display = "block";
         const tooltipRect = this.getBoundingClientRect();
@@ -186,10 +184,12 @@ export class MCIToolTip extends BaseElement {
         }
         this._applyStylesFromAttributes();
     }
+
     disable() {
         super.disable();
-        this.style.color = "gray"; // Change text color
+        this.style.color = "gray";
     }
+
     enable() {
         super.enable();
         this.style.color = this.getAttribute("text-color") || "black";

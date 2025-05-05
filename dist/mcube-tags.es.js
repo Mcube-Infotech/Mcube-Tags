@@ -24,10 +24,10 @@ function E() {
 function k() {
   console.log("Hide function called on", this), this.setAttribute("hide", "true"), this.style.display = "none";
 }
-function S(s) {
+function C(s) {
   console.log(`Adding class ${s} to`, this), this.classList.add(s);
 }
-function C(s) {
+function S(s) {
   console.log(`Removing class ${s} from`, this), this.classList.remove(s);
 }
 function $(s) {
@@ -35,11 +35,11 @@ function $(s) {
 }
 const I = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
   __proto__: null,
-  addClass: S,
+  addClass: C,
   disable: w,
   enable: A,
   hide: k,
-  removeClass: C,
+  removeClass: S,
   reset: v,
   show: E,
   toggleClass: $
@@ -87,11 +87,11 @@ class r extends HTMLElement {
     }, e = {
       width: h(this, "width", "auto"),
       height: h(this, "height", "auto"),
-      backgroundColor: h(this, "bg-color", "#373737"),
-      color: h(this, "text-color", "#000"),
+      backgroundColor: h(this, "bg-color", "#fffff"),
+      color: h(this, "text-color", "white"),
       padding: h(this, "padding", "5px"),
       border: h(this, "border", "none"),
-      borderRadius: h(this, "border-radius", "20px"),
+      borderRadius: h(this, "border-radius", "8px"),
       fontSize: t[h(this, "size", "medium")],
       // Apply size mapping
       display: this.hasAttribute("hide") ? "none" : "block",
@@ -178,7 +178,7 @@ class z extends r {
   }
 }
 customElements.define("mci-badge", z);
-class L extends r {
+class T extends r {
   constructor() {
     super(), this.timeout = null;
   }
@@ -199,11 +199,21 @@ class L extends r {
       this.style.padding = t;
     }
   }
+  startAutoClose() {
+    this.timeout && clearTimeout(this.timeout);
+    const t = this.getAttribute("auto-close");
+    let e = 3e3;
+    t && !isNaN(parseInt(t)) && (e = parseInt(t)), this.timeout = setTimeout(() => {
+      this.classList.add("hide"), setTimeout(() => {
+        this.remove();
+      }, 600);
+    }, e);
+  }
   connectedCallback() {
     this.render(), this.show(), this.hasAttribute("auto-close") && this.startAutoClose();
   }
   render() {
-    const t = this.getStatusColor() || "#373737", e = this.hasAttribute("dismissible"), i = e ? '<button class="close-btn">&times;</button>' : "";
+    const t = this.getStatusColor() || "#373737", e = this.hasAttribute("dismissible"), i = this.hasAttribute("auto-close"), o = e ? '<button class="close-btn">&times;</button>' : "";
     this.shadow.innerHTML = `
             <style>
                 :host {
@@ -218,17 +228,17 @@ class L extends r {
                     background: var(--alert-bg, ${t}) !important;
                     color: var(--alert-text, #fff);
                     box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
-                    ${this.getPositionStyle()};
-                    opacity: 0;
-                    transform: translateY(-10px);
-                    transition: opacity 3s ease-in-out, transform 1s ease-in-out;
-                }
-    
-                :host(.show) {
+                    ${this.getPositionStyle()}
                     opacity: 1;
                     transform: translateY(0);
+                    ${i ? "transition: opacity 0.6s ease-in-out, transform 0.6s ease-in-out;" : ""}
                 }
-    
+
+                :host(.hide) {
+                    opacity: 0;
+                    transform: translateY(-10px);
+                }
+
                 .close-btn {
                     background: none;
                     border: none;
@@ -238,13 +248,13 @@ class L extends r {
                     cursor: pointer;
                     margin-left: 10px;
                 }
-    
+
                 .close-btn:hover {
                     opacity: 0.7;
                 }
             </style>
             <span>${this.getAttribute("value") || "Alert message"}</span>
-            ${i}
+            ${o}
         `, e && this.shadow.querySelector(".close-btn").addEventListener("click", () => this.hide());
   }
   getPositionStyle() {
@@ -256,21 +266,27 @@ class L extends r {
       const i = this.shadow.querySelector("span");
       i && (i.textContent = e);
     }
-    (t === "dismissible" || t === "auto-close") && this.render(), t === "auto-close" && this.startAutoClose(), this._applyStylesFromAttributes();
+    ["dismissible", "auto-close"].includes(t) && this.render(), t === "auto-close" && this.startAutoClose(), this._applyStylesFromAttributes();
   }
-  disable() {
-    disable();
-    const t = this.shadowRoot.querySelector(".close-btn");
-    t && (t.style.pointerEvents = "none", t.style.opacity = "0.5");
-  }
-  enable() {
-    super.enable();
-    const t = this.shadowRoot.querySelector(".close-btn");
-    t && (t.style.pointerEvents = "auto", t.style.opacity = "1");
-  }
+  // disable() {
+  //     super.disable();
+  //     const closeBtn = this.shadowRoot.querySelector(".close-btn");
+  //     if (closeBtn) {
+  //         closeBtn.style.pointerEvents = "none";
+  //         closeBtn.style.opacity = "0.5";
+  //     }
+  // }
+  // enable() {
+  //     super.enable();
+  //     const closeBtn = this.shadowRoot.querySelector(".close-btn");
+  //     if (closeBtn) {
+  //         closeBtn.style.pointerEvents = "auto";
+  //         closeBtn.style.opacity = "1";
+  //     }
+  // }
 }
-customElements.define("mci-alert", L);
-class M extends r {
+customElements.define("mci-alert", T);
+class L extends r {
   constructor() {
     super(), this.checked = this.hasAttribute("checked");
   }
@@ -280,8 +296,24 @@ class M extends r {
   connectedCallback() {
     this.render();
   }
+  getStatusColor() {
+    const t = this.getAttribute("status") || "secondary";
+    return {
+      primary: "#007bff",
+      secondary: "#373737",
+      success: "#28a745",
+      danger: "#dc3545",
+      warning: "#ffc107",
+      info: "#17a2b8",
+      light: "#f8f9fa",
+      dark: "#343a40"
+    }[t] || "#373737";
+  }
   render() {
-    const t = this.getAttribute("size") || "medium", e = this.getAttribute("on-label") || "ON", i = this.getAttribute("off-label") || "OFF", o = this.hasAttribute("disabled"), n = this.getAttribute("label-msg") || "on", d = this.getAttribute("bg-color") || "#373737", c = "#ccc", l = this.getAttribute("text-color") || "#666", a = this.getAttribute("switch-label-color") || "#fff", u = this.getAttribute("set-position") || "static";
+    const t = this.getAttribute("size") || "medium", e = this.getAttribute("on-label") || "ON", i = this.getAttribute("off-label") || "OFF", o = this.hasAttribute("disabled"), n = this.getAttribute("label-msg") || "on";
+    let c = this.getAttribute("bg-color");
+    c || (c = this.getStatusColor() || "#373737");
+    const d = "#ccc", l = this.getAttribute("text-color") || "#666", a = this.getAttribute("switch-label-color") || "#fff", u = this.getAttribute("set-position") || "static";
     this.checked = this.hasAttribute("checked");
     const p = {
       small: { width: "40px", height: "20px", sliderSize: "14px", moveX: "18px", fontSize: "10px" },
@@ -318,7 +350,7 @@ class M extends r {
                     left: 0;
                     right: 0;
                     bottom: 0;
-                    background-color: ${this.checked ? d : c};
+                    background-color: ${this.checked ? c : d};
                     transition: .4s;
                     border-radius: ${b};
                 }
@@ -346,7 +378,7 @@ class M extends r {
                 }
 
                 .switch-label-on {
-                    color: ${a}; /* Custom color for switch label */
+                    color: ${a};
                 }
 
                 :host([disabled]) .switch {
@@ -363,7 +395,9 @@ class M extends r {
         `, this.inputElement = this.shadow.querySelector("input"), this.labelElement = this.shadow.querySelector(".switch-label"), this.sliderElement = this.shadow.querySelector(".slider"), this.inputElement.addEventListener("change", () => this.handleToggle());
   }
   handleToggle() {
-    this.checked = this.inputElement.checked, this.checked ? (this.setAttribute("checked", ""), this.sliderElement.style.backgroundColor = this.getAttribute("bg-color") || "#373737") : (this.removeAttribute("checked"), this.sliderElement.style.backgroundColor = "#ccc"), this.labelElement && (this.labelElement.textContent = this.checked ? this.getAttribute("on-label") || "ON" : this.getAttribute("off-label") || "OFF"), this.dispatchEvent(new CustomEvent("toggle", { detail: { checked: this.checked } }));
+    this.checked = this.inputElement.checked;
+    let t = this.getAttribute("bg-color");
+    t || (t = this.getStatusColor() || "#373737"), this.checked ? (this.setAttribute("checked", ""), this.sliderElement.style.backgroundColor = t) : (this.removeAttribute("checked"), this.sliderElement.style.backgroundColor = "#ccc"), this.labelElement && (this.labelElement.textContent = this.checked ? this.getAttribute("on-label") || "ON" : this.getAttribute("off-label") || "OFF"), this.dispatchEvent(new CustomEvent("toggle", { detail: { checked: this.checked } }));
   }
   onAttributeChange(t, e) {
     ["checked", "disabled", "size", "on-label", "off-label", "label-msg", "bg-color", "text-color", "switch-label-color", "set-position"].includes(t) && (this.checked = this.hasAttribute("checked"), this.inputElement && (this.inputElement.checked = this.checked), this.render());
@@ -372,8 +406,8 @@ class M extends r {
     this.checked = !this.checked, this.checked ? this.setAttribute("checked", "") : this.removeAttribute("checked");
   }
 }
-customElements.define("mci-toggle", M);
-class T extends r {
+customElements.define("mci-toggle", L);
+class M extends r {
   constructor() {
     super(), this.targetInput = null;
   }
@@ -427,14 +461,8 @@ class T extends r {
     const i = new MutationObserver(e);
     i.observe(document.body, { childList: !0, subtree: !0 });
   }
-  disable() {
-    super.disable(), this.style.color = "gray";
-  }
-  enable() {
-    super.enable(), this.style.color = this.getAttribute("text-color") || "black";
-  }
 }
-customElements.define("mci-help-text", T);
+customElements.define("mci-help-text", M);
 class F extends r {
   constructor() {
     super(), this.render(), this.updateTime(), this.interval = setInterval(() => this.updateTime(), 1e3);
@@ -449,8 +477,8 @@ class F extends r {
     }
   }
   _applystylesFromAttributes() {
-    let t = this.getAttribute("bg-color") || "#373737";
-    this.outerElement.style.setProperty("--bg-color", t);
+    let t = this.getAttribute("bg-color");
+    this.outerElement.style.backgroundColor = t;
     let e = this.getAttribute("text-color") || "#ffffff";
     this.timerTitle.style.color = e, this.timerDisplay.style.color = e;
   }
@@ -467,11 +495,11 @@ class F extends r {
                     display: flex;
                     flex-direction: column;
                     align-items: center;
-                    border-radius: inherit;
+                    border-radius: 10px;
                     box-sizing: border-box;
-                    background: var(--bg-color, #373737);
+                    background: ${this.getAttribute("bg-color")};
                     color: var(--text-color, white);
-                    padding: 10px;
+                    padding: 5px;
                 }
 
                 h3 {
@@ -509,7 +537,7 @@ class F extends r {
   }
 }
 customElements.define("mci-clock", F);
-class R extends r {
+class _ extends r {
   constructor() {
     super(), this.render();
   }
@@ -522,16 +550,16 @@ class R extends r {
   _updateStars() {
     const t = parseInt(this.getAttribute("max") || "5"), e = parseFloat(this.getAttribute("rating") || "0"), i = this.getAttribute("star-color") || "#FFD700", o = "lightgray";
     this.container.innerHTML = "";
-    let n = Math.floor(e), d = e % 1 >= 0.5 ? 1 : 0, c = t - n - d;
+    let n = Math.floor(e), c = e % 1 >= 0.5 ? 1 : 0, d = t - n - c;
     for (let l = 0; l < n; l++) {
       const a = document.createElement("span");
       a.style.backgroundColor = i, this.container.appendChild(a);
     }
-    if (d) {
+    if (c) {
       const l = document.createElement("span");
       l.style.background = `linear-gradient(to right, ${i} 50%, ${o} 50%)`, this.container.appendChild(l);
     }
-    for (let l = 0; l < c; l++) {
+    for (let l = 0; l < d; l++) {
       const a = document.createElement("span");
       a.style.backgroundColor = o, this.container.appendChild(a);
     }
@@ -560,15 +588,9 @@ class R extends r {
             <div></div>
         `, this.container = this.shadowRoot.querySelector("div"), this._updateStars();
   }
-  disable() {
-    super.disable(), this.style.pointerEvents = "none";
-  }
-  enable() {
-    super.enable(), this.style.pointerEvents = "auto";
-  }
 }
-customElements.define("mci-rating", R);
-class _ extends r {
+customElements.define("mci-rating", _);
+class R extends r {
   constructor() {
     super(), this.targetElement = null;
   }
@@ -576,49 +598,23 @@ class _ extends r {
     return [...r.observedAttributes, "value", "tooltip-direction", "text-size", "text-color", "bg-color", "border-radius", "padding", "for"];
   }
   _applyStylesFromAttributes() {
-    if (this.hasAttribute("width")) {
-      let t = this.getAttribute("width");
-      this.style.width = t;
-    }
-    if (this.hasAttribute("height")) {
-      let t = this.getAttribute("height");
-      this.style.height = t;
-    }
-    if (this.hasAttribute("padding")) {
-      let t = this.getAttribute("padding");
-      this.style.padding = t;
-    }
-    if (this.hasAttribute("text-size")) {
-      let t = this.getAttribute("padding");
-      this.style.fontSize = t;
-    }
-    if (this.hasAttribute("text-color")) {
-      let t = this.getAttribute("text-color");
-      this.style.color = t;
-    }
-    if (this.hasAttribute("bg-color")) {
-      let t = this.getAttribute("bg-color");
-      this.style.backgroundColor = t;
-    }
-    if (this.hasAttribute("border-radius")) {
-      let t = this.getAttribute("border-radius");
-      this.style.borderRadius = t;
-    }
+    this.hasAttribute("width") && (this.style.width = this.getAttribute("width")), this.hasAttribute("height") && (this.style.height = this.getAttribute("height")), this.hasAttribute("padding") && (this.style.padding = this.getAttribute("padding")), this.hasAttribute("text-size") && (this.style.fontSize = this.getAttribute("text-size")), this.hasAttribute("text-color") && (this.style.color = this.getAttribute("text-color")), this.hasAttribute("bg-color") && (this.style.backgroundColor = this.getAttribute("bg-color")), this.hasAttribute("border-radius") && (this.style.borderRadius = this.getAttribute("border-radius"));
   }
   connectedCallback() {
     this.render(), this.attachEventListeners();
   }
   render() {
+    const e = location.hostname === "localhost" || location.hostname === "127.0.0.1" ? "absolute" : "fixed";
     this.shadow.innerHTML = `
             <style>
                 :host {
-                    position: absolute;
+                    position: ${e};
                     display: none;
                     background: var(--tooltip-bg, ${this.getAttribute("bg-color") || "#373737"});
                     color: var(--tooltip-text, ${this.getAttribute("text-color") || "white"});
                     padding: ${this.getAttribute("padding") || "5px 10px"};
                     border-radius: ${this.getAttribute("border-radius") || "4px"};
-                    font-size: ${this.getAttribute("font-size") || "12px"};
+                    font-size: ${this.getAttribute("text-size") || "12px"};
                     white-space: nowrap;
                     z-index: 1000;
                     transition: opacity 0.3s ease-in-out;
@@ -632,7 +628,6 @@ class _ extends r {
                     border-style: solid;
                 }
 
-                /* Tooltip Arrow Styles */
                 :host([tooltip-direction="top"]) .tooltip-arrow {
                     bottom: -5px;
                     left: 50%;
@@ -720,19 +715,19 @@ class _ extends r {
     super.enable(), this.style.color = this.getAttribute("text-color") || "black";
   }
 }
-customElements.define("mci-tool-tip", _);
+customElements.define("mci-tool-tip", R);
 class B extends r {
   constructor() {
     super();
   }
   static get observedAttributes() {
-    return [...r.observedAttributes, "variant", "text", "hover-effect", "transition"];
+    return [...r.observedAttributes, "variant", "text", "hover-effect", "transition", "disabled"];
   }
   connectedCallback() {
     this.render();
   }
   render() {
-    const t = this.getAttribute("text") || "Click Me", e = this.getAttribute("variant") || "normal", i = this.getAttribute("padding") || "10px 20px", o = this.getAttribute("border-radius") || "5px", n = this.getAttribute("transition") || "0.3s", d = this.getAttribute("hover-effect") || "none", c = this.getAttribute("bg-color") || this.getStatusColor(), l = this.getAttribute("text-color") || "#fff";
+    const t = this.getAttribute("text") || "Click Me", e = this.getAttribute("variant") || "normal", i = this.getAttribute("padding") || "10px 20px", o = this.getAttribute("border-radius") || "5px", n = this.getAttribute("transition") || "0.3s", c = this.getAttribute("hover-effect") || "none", d = this.getAttribute("bg-color") || this.getStatusColor(), l = this.getAttribute("text-color") || "#fff";
     let a = `
             padding: ${i};
             border-radius: ${o};
@@ -742,16 +737,16 @@ class B extends r {
             border: none;
             outline: none;
         `, u = "";
-    d.includes("scale") && (u += "transform: scale(1.05);"), d.includes("shadow") && (u += "box-shadow: 0px 4px 8px rgba(1, 0, 0, 1);"), e === "outline" ? (a += `
+    c.includes("scale") && (u += "transform: scale(1.05);"), c.includes("shadow") && (u += "box-shadow: 0px 4px 8px rgba(1, 0, 0, 1);"), e === "outline" ? (a += `
                 background: transparent !important;
-                border: 2px solid ${c} !important;
-                color: ${c} !important;
-            `, u += `background: ${c} !important; color: #fff !important;`) : e === "disable" ? a += `
+                border: 2px solid ${d} !important;
+                color: ${d} !important;
+            `, u += `background: ${d} !important; color: #fff !important;`) : e === "disable" ? a += `
                 background: #ccc !important;
                 color: #666 !important;
                 cursor: not-allowed !important;
                 pointer-events: none !important;
-            ` : a += `background: ${c} !important; color: ${l} !important;`, this.shadow.innerHTML = `
+            ` : a += `background: ${d} !important; color: ${l} !important;`, this.shadow.innerHTML = `
             <style>
                 :host {
                     display: inline-flex;
@@ -775,7 +770,7 @@ class B extends r {
         `;
   }
   onAttributeChange(t) {
-    ["status", "variant", "hover-effect"].includes(t) && this.render();
+    ["status", "variant", "hover-effect", "disabled"].includes(t) && this.render();
   }
 }
 customElements.define("mci-button", B);
@@ -799,7 +794,7 @@ class q extends r {
     ];
   }
   _applyStylesFromAttributes() {
-    this.inputElement && (this.inputElement.style.backgroundColor = this.getAttribute("bg-color") || "#373737", this.inputElement.style.color = this.getAttribute("text-color") || "white", this.inputElement.style.width = this.getAttribute("width") || "300px", this.inputElement.style.fontSize = this.getAttribute("text-size") || "16px", this.inputElement.style.borderRadius = this.getAttribute("border-radius") || "0px", this.inputElement.style.border = "none");
+    this.inputElement && (this.inputElement.style.backgroundColor = this.getAttribute("bg-color") || "#373737", this.inputElement.style.color = this.getAttribute("text-color") || "white", this.inputElement.style.width = this.getAttribute("width") || "auto", this.inputElement.style.fontSize = this.getAttribute("text-size") || "16px", this.inputElement.style.borderRadius = this.getAttribute("border-radius") || "0px", this.inputElement.style.border = "none");
   }
   connectedCallback() {
     this.render(), this.inputElement = this.shadow.querySelector("input"), this.iconElement = this.shadow.querySelector(".icon-box"), this.checkIcon = this.shadow.querySelector(".icon-check"), this.crossIcon = this.shadow.querySelector(".icon-cross"), this.addEventListeners(), this.inputElement.value = this.getAttribute("value") || "", this._applyStylesFromAttributes();
@@ -933,11 +928,13 @@ class H extends r {
       "symbol",
       "uppercase",
       "min-length",
-      "max-length"
+      "max-length",
+      "disabled",
+      "width"
     ];
   }
   _applyStylesFromAttributes() {
-    if (this.inputElement && (this.inputElement.style.backgroundColor = this.getAttribute("bg-color") || "#373737", this.inputElement.style.color = this.getAttribute("text-color") || "white", this.inputElement.style.width = this.getAttribute("width") || "300px", this.inputElement.style.fontSize = this.getAttribute("text-size") || "16px", this.inputElement.style.borderRadius = this.getAttribute("border-radius") || "0px", this.inputElement.style.border = "none", this.toggleIcon)) {
+    if (this.inputElement && (this.inputElement.style.backgroundColor = this.getAttribute("bg-color") || "#373737", this.inputElement.style.color = this.getAttribute("text-color") || "white", this.inputElement.style.width = this.getAttribute("width") || "auto", this.inputElement.style.fontSize = this.getAttribute("text-size") || "16px", this.inputElement.style.borderRadius = this.getAttribute("border-radius") || "0px", this.inputElement.style.border = "none", this.toggleIcon)) {
       const t = this.getAttribute("bg-color") || "black";
       this.toggleIcon.style.color = t.toLowerCase() === "black" ? "white" : "black";
     }
@@ -946,7 +943,7 @@ class H extends r {
     this.shadowRoot && (this.render(), this.cacheElements(), this.applyBaseStyles(), this.addEventListeners(), this.updateIconVisibility());
   }
   attributeChangedCallback(t, e, i) {
-    super.attributeChangedCallback(t, e, i), t === "icon-ui" && this.updateIconVisibility(), e !== i && this.applyBaseStyles();
+    super.attributeChangedCallback(t, e, i), t === "icon-ui" && this.updateIconVisibility(), e !== i && this.applyBaseStyles(), t === "disabled" && (this.inputElement.disabled = i !== null);
   }
   updateIconVisibility() {
     if (this.toggleIcon) {
@@ -958,7 +955,10 @@ class H extends r {
     this.inputElement = this.shadowRoot.querySelector("input"), this.toggleIcon = this.shadowRoot.querySelector(".toggle-icon"), this.errorMessage = this.shadowRoot.querySelector(".error-message"), (!this.inputElement || !this.toggleIcon || !this.errorMessage) && console.error("MCIPasswordBox: Elements not found. Check rendering.");
   }
   applyBaseStyles() {
-    typeof this._applyStylesFromAttributes == "function" && this._applyStylesFromAttributes();
+    if (typeof this._applyStylesFromAttributes == "function" && this._applyStylesFromAttributes(), this.errorMessage) {
+      const t = this.getAttribute("width") || "200px";
+      this.errorMessage.style.maxWidth = t;
+    }
   }
   addEventListeners() {
     !this.toggleIcon || !this.inputElement || (this.toggleIcon.addEventListener("click", () => {
@@ -977,14 +977,14 @@ class H extends r {
                 :host {
                     display: inline-block;
                     font-family: Arial, sans-serif;
-                    width: var(--width, 300px); /* Fixed width */
+                    width: var(--width, 300px);
                     background: transparent !important;
                 }
                 .input-container {
                     display: flex;
                     align-items: center;
                     width: auto;
-                    max-width: auto; /* Ensures it doesn't expand */
+                    max-width: auto;
                     background: var(--bg-color, white);
                     border: var(--border, 1px solid black);
                     border-radius: var(--border-radius, 6px);
@@ -999,8 +999,11 @@ class H extends r {
                     font-size: var(--text-size, 16px);
                     color: var(--text-color, black);
                     background: transparent;
-                    width: auto; /* Make it fit within container */
+                    width: auto;
                     box-sizing: border-box;
+                }
+                input:disabled {
+                    background: #f0f0f0;
                 }
                 .toggle-icon {
                     cursor: pointer;
@@ -1018,11 +1021,11 @@ class H extends r {
                     color: red;
                     font-size: 12px;
                     margin-top: 5px;
-                    max-width: 300px; /* Same as input box */
                     word-wrap: break-word;
+                    max-width: 200px; /* Default; overridden in JS */
                 }
             </style>
-    
+
             <div class="input-container">
                 <input type="password" placeholder="${this.getAttribute("placeholder") || "Enter password"}" />
                 <span class="toggle-icon">
@@ -1042,7 +1045,7 @@ class H extends r {
     return `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-slash-fill" viewBox="0 0 16 16">
                <path d="m10.79 12.912-1.614-1.615a3.5 3.5 0 0 1-4.474-4.474l-2.06-2.06C.938 6.278 0 8 0 8s3 5.5 8 5.5a7 7 0 0 0 2.79-.588M5.21 3.088A7 7 0 0 1 8 2.5c5 0 8 5.5 8 5.5s-.939 1.721-2.641 3.238l-2.062-2.062a3.5 3.5 0 0 0-4.474-4.474z"/>
                <path d="M5.525 7.646a2.5 2.5 0 0 0 2.829 2.829zm4.95.708-2.829-2.83a2.5 2.5 0 0 1 2.829 2.829zm3.171 6-12-12 .708-.708 12 12z"/>
-               </svg>`;
+                </svg>`;
   }
 }
 customElements.define("mci-password-box", H);

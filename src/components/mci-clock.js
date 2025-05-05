@@ -20,12 +20,11 @@ class MCIClock extends BaseElement {
     }
 
     _applystylesFromAttributes() {
-        let bgColor = this.getAttribute("bg-color") || "#373737";
-        this.outerElement.style.setProperty("--bg-color", bgColor); // Use CSS variable
-
-        let txtColor = this.getAttribute("text-color") || "#ffffff";
-        this.timerTitle.style.color = txtColor;
-        this.timerDisplay.style.color = txtColor;
+        let bgColor = this.getAttribute("bg-color");
+        this.outerElement.style.backgroundColor=bgColor;
+        let textColor = this.getAttribute("text-color") || "#ffffff";
+        this.timerTitle.style.color = textColor;
+        this.timerDisplay.style.color = textColor;
     }
 
     onAttributeChange(name, oldValue, newValue) {
@@ -59,11 +58,11 @@ class MCIClock extends BaseElement {
                     display: flex;
                     flex-direction: column;
                     align-items: center;
-                    border-radius: inherit;
+                    border-radius: 10px;
                     box-sizing: border-box;
-                    background: var(--bg-color, #373737);
+                    background: ${this.getAttribute('bg-color') };
                     color: var(--text-color, white);
-                    padding: 10px;
+                    padding: 5px;
                 }
 
                 h3 {

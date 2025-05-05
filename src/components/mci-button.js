@@ -6,7 +6,7 @@ export class MciButton extends BaseElement {
     }
 
     static get observedAttributes() {
-        return [...BaseElement.observedAttributes, "variant", "text", "hover-effect", "transition"];
+        return [...BaseElement.observedAttributes, "variant", "text", "hover-effect", "transition", "disabled"];
     }
 
     connectedCallback() {
@@ -86,7 +86,7 @@ export class MciButton extends BaseElement {
     }
     
     onAttributeChange(name) {
-        if (["status", "variant", "hover-effect"].includes(name)) {
+        if (["status", "variant", "hover-effect", "disabled"].includes(name)) {
             this.render();
         }
     }
